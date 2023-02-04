@@ -2,23 +2,25 @@ package com.example.RiskEngine.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.data.relational.core.mapping.Table;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import java.util.UUID;
+import java.io.Serializable;
 
 @Data
-@Entity
-public class PaymentDTO {
+@Table(name="paymentdto")
+
+public class PaymentDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private String paymentId;
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private String paymentid;
     private long amount;
     private String currency;
-    private String userId;
-    private String payeeId;
-    private String paymentMethodId;
-    private int risk;
+    private String userid;
+    private String payeeid;
+    private String paymentmethodid;
+    private int riskscore;
+    private boolean allowed;
 }

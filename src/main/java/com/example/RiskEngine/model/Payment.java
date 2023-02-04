@@ -12,7 +12,7 @@ import java.util.UUID;
 public class Payment {
     public long amount;
     public String currency;
-    private String userId = String.valueOf(UUID.randomUUID());
-    private String payeeId = String.valueOf(UUID.randomUUID());
-    private String paymentMethodId = String.valueOf(UUID.randomUUID());
+    private String userId ;
+    private String payeeId;
+    private String paymentMethodId;
 }
