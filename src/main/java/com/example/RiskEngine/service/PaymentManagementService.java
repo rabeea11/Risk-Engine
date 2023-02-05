@@ -7,6 +7,7 @@ import com.example.RiskEngine.interfaces.RiskCalculator;
 import com.example.RiskEngine.model.Payment;
 import com.example.RiskEngine.model.PaymentDTO;
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,24 +30,29 @@ public class PaymentManagementService implements IPaymentManagementService {
     @Override
     public void handlePayment(String payment) {
         PaymentDTO paymentDTO=parsePaymentToDTO(payment);
-        paymentDB.save(paymentDTO);
+        if(paymentDTO != null)
+            paymentDB.save(paymentDTO);
     }
 
     private PaymentDTO parsePaymentToDTO(String paymentStr) {
-        Payment payment = gson.fromJson(paymentStr,Payment.class);
-        PaymentDTO paymentDTO = new PaymentDTO();
-        paymentDTO.setRiskscore(calculateRisk());
+        try {
+            Payment payment = gson.fromJson(paymentStr, Payment.class);
+            PaymentDTO paymentDTO = new PaymentDTO();
+            paymentDTO.setRiskscore(calculateRisk());
 //        paymentDTO.setPaymentid(UUID.randomUUID().toString());
-        paymentDTO.setPaymentmethodid(payment.getPaymentMethodId());
-        paymentDTO.setAmount(payment.getAmount());
-        paymentDTO.setUserid(payment.getUserId());
-        paymentDTO.setCurrency(payment.getCurrency());
-        paymentDTO.setPayeeid(payment.getPayeeId());
-        paymentDTO.setAllowed(checkIfAllowed(payment));
-        log.info("Insert new Payment to DB: {} " , paymentDTO);
-        return paymentDTO;
+            paymentDTO.setPaymentmethodid(payment.getPaymentMethodId());
+            paymentDTO.setAmount(payment.getAmount());
+            paymentDTO.setUserid(payment.getUserId());
+            paymentDTO.setCurrency(payment.getCurrency());
+            paymentDTO.setPayeeid(payment.getPayeeId());
+            paymentDTO.setAllowed(checkIfAllowed(payment));
+            log.info("Insert new Payment to DB: {} ", paymentDTO);
+            return paymentDTO;
+        } catch (JsonParseException ex) {
+            log.error("Message Received from Kafka is Not Valid, Error: {}",ex.getMessage());
+            return null;
+        }
     }
-
     private int calculateRisk() {
         RiskCalculator result = () -> (int)(Math.random()*1000);
         return result.calculate();

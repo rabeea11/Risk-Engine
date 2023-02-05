@@ -1,8 +1,5 @@
 package com.example.RiskEngine.kafka;
 
-import com.example.RiskEngine.model.Payment;
-import com.example.RiskEngine.model.PaymentDTO;
-import com.example.RiskEngine.interfaces.IPaymentDAO;
 import com.example.RiskEngine.service.PaymentManagementService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +17,6 @@ public class Consumer {
     public void consume(String payment) {
         log.info("message consumed {}", payment);
         paymentManagementService.handlePayment(payment);
-
 
     }
 }
