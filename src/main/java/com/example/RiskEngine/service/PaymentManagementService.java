@@ -39,7 +39,6 @@ public class PaymentManagementService implements IPaymentManagementService {
             Payment payment = gson.fromJson(paymentStr, Payment.class);
             PaymentDTO paymentDTO = new PaymentDTO();
             paymentDTO.setRiskscore(calculateRisk());
-//        paymentDTO.setPaymentid(UUID.randomUUID().toString());
             paymentDTO.setPaymentmethodid(payment.getPaymentMethodId());
             paymentDTO.setAmount(payment.getAmount());
             paymentDTO.setUserid(payment.getUserId());
@@ -53,22 +52,24 @@ public class PaymentManagementService implements IPaymentManagementService {
             return null;
         }
     }
+    //This method Calculates Risk for Each Payment
     private int calculateRisk() {
         RiskCalculator result = () -> (int)(Math.random()*1000);
         return result.calculate();
     }
 
+    // Method to Check if a specific Payment is Accepted / Rejected,
+    // We will Accept 70% of the coming Payments, and Reject 30%.
     private boolean checkIfAllowed(Payment payment){
-        log.info("Rejected : {}",rejected.get());
-        log.info("Allowed : {}",allowed.get());
-
         AllowPayments allowPayments = (payment1 -> {
             if(allowed.get()<7){
+                log.info("Payment Accepted : {}",payment);
                 allowed.incrementAndGet();
                 return true;
             }else{
                 rejected.incrementAndGet();
                 if(rejected.get() >=3){
+                    log.info("Payment Rejected : {}",payment);
                     allowed.set(0);
                     return false;
                 }
