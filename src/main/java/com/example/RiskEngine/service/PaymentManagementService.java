@@ -11,8 +11,6 @@ import com.google.gson.JsonParseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
